@@ -30,7 +30,7 @@
     this.$menu = $(this.options.menu).appendTo('body')
     this.source = this.options.source
     this.itemLabel = this.options.itemLabel || null
-    this.selectCallback = this.options.selectCallback || null;
+    this.selected = this.options.selectCallback || null;
     this.shown = false
     this.listen()
   }
@@ -40,7 +40,7 @@
     constructor: Typeahead
 
   , select: function () {
-      var active = this.$menu.find('.active');
+      var active = this.$menu.find('.active')
       var val = active.attr('data-value')
       var item = active.data("item")
       this.$element.val(val)
@@ -109,9 +109,9 @@
         , item
 
       while (item = items.shift()) {
-        var itemText = item;
+        var itemText = item
         if(this.itemLabel !== null){
-          itemText = item[this.itemLabel];
+          itemText = item[this.itemLabel]
         }
 
         if (!itemText.toLowerCase().indexOf(this.query.toLowerCase())) beginswith.push(item)
@@ -123,9 +123,9 @@
     }
 
   , highlighter: function (item) {
-      var itemText = item;
+      var itemText = item
       if(this.itemLabel !== null){
-        itemText = item[this.itemLabel];
+        itemText = item[this.itemLabel]
       }
       return itemText.replace(new RegExp('(' + this.query + ')', 'ig'), function ($1, match) {
         return '<strong>' + match + '</strong>'
@@ -134,15 +134,15 @@
 
   , render: function (items) {
       var that = this
-      var itemText = null;
+      var itemText = null
 
       items = $(items).map(function (i, item) {
-        itemText = item;
+        itemText = item
         if(that.itemLabel !== null){
-          itemText = item[that.itemLabel];
+          itemText = item[that.itemLabel]
         }
         i = $(that.options.item).attr('data-value', itemText)
-        i.data("item",item);
+        i.data("item",item)
         i.find('a').html(that.highlighter(item))
         return i[0]
       })
