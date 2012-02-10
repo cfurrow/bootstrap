@@ -30,7 +30,7 @@
     this.$menu = $(this.options.menu).appendTo('body')
     this.source = this.options.source
     this.itemLabel = this.options.itemLabel || null
-    this.selected = this.options.selectCallback || null;
+    this.selected = this.options.selected || null;
     this.shown = false
     this.listen()
   }
@@ -44,8 +44,8 @@
       var val = active.attr('data-value')
       var item = active.data("item")
       this.$element.val(val)
-      if(this.selectCallback !== null){
-        this.selectCallback.apply(this,[item])
+      if(this.selected !== null){
+        this.selected.apply(this,[item])
       }
       return this.hide()
     }
