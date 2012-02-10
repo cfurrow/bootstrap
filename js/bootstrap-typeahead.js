@@ -30,7 +30,7 @@
     this.$menu = $(this.options.menu).appendTo('body')
     this.source = this.options.source
     this.itemLabel = this.options.itemLabel || null
-    this.selected = this.options.selectCallback || null;
+    this.selected = this.options.selected || null;
     this.shown = false
     this.listen()
   }
