@@ -29,6 +29,8 @@
     this.highlighter = this.options.highlighter || this.highlighter
     this.$menu = $(this.options.menu).appendTo('body')
     this.source = this.options.source
+    this.itemLabel = this.options.itemLabel || null
+    this.selected = this.options.selectCallback || null;
     this.shown = false
     this.listen()
   }
@@ -38,8 +40,13 @@
     constructor: Typeahead
 
   , select: function () {
-      var val = this.$menu.find('.active').attr('data-value')
+      var active = this.$menu.find('.active')
+      var val = active.attr('data-value')
+      var item = active.data("item")
       this.$element.val(val)
+      if(this.selectCallback !== null){
+        this.selectCallback.apply(this,[item])
+      }
       return this.hide()
     }
 
@@ -89,6 +96,9 @@
     }
 
   , matcher: function (item) {
+      if(this.itemLabel !== null){
+        return ~item[this.itemLabel].toLowerCase().indexOf(this.query.toLowerCase())
+      }
       return ~item.toLowerCase().indexOf(this.query.toLowerCase())
     }
 
@@ -99,8 +109,13 @@
         , item
 
       while (item = items.shift()) {
-        if (!item.toLowerCase().indexOf(this.query.toLowerCase())) beginswith.push(item)
-        else if (~item.indexOf(this.query)) caseSensitive.push(item)
+        var itemText = item
+        if(this.itemLabel !== null){
+          itemText = item[this.itemLabel]
+        }
+
+        if (!itemText.toLowerCase().indexOf(this.query.toLowerCase())) beginswith.push(item)
+        else if (~itemText.indexOf(this.query)) caseSensitive.push(item)
         else caseInsensitive.push(item)
       }
 
@@ -108,16 +123,26 @@
     }
 
   , highlighter: function (item) {
-      return item.replace(new RegExp('(' + this.query + ')', 'ig'), function ($1, match) {
+      var itemText = item
+      if(this.itemLabel !== null){
+        itemText = item[this.itemLabel]
+      }
+      return itemText.replace(new RegExp('(' + this.query + ')', 'ig'), function ($1, match) {
         return '<strong>' + match + '</strong>'
       })
     }
 
   , render: function (items) {
       var that = this
+      var itemText = null
 
       items = $(items).map(function (i, item) {
-        i = $(that.options.item).attr('data-value', item)
+        itemText = item
+        if(that.itemLabel !== null){
+          itemText = item[that.itemLabel]
+        }
+        i = $(that.options.item).attr('data-value', itemText)
+        i.data("item",item)
         i.find('a').html(that.highlighter(item))
         return i[0]
       })
