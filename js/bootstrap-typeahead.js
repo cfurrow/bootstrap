@@ -44,8 +44,8 @@
       var val = active.attr('data-value')
       var item = active.data("item")
       this.$element.val(val)
-      if(this.selectCallback !== null){
-        this.selectCallback.apply(this,[item])
+      if(this.selected !== null){
+        this.selected.apply(this,[item])
       }
       return this.hide()
     }
